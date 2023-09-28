@@ -1,3 +1,4 @@
+"""Semantic Kernel Orchestrator using Native and Semantic Functions"""
 import json
 from semantic_kernel import ContextVariables, Kernel
 from semantic_kernel.skill_definition import sk_function
@@ -5,6 +6,8 @@ from semantic_kernel.orchestration.sk_context import SKContext
 
 
 class Orchestrator:
+    """Orchestrator class"""
+
     def __init__(self, kernel: Kernel):
         self._kernel = kernel
 
