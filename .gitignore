@@ -104,6 +104,7 @@ ENV/
 env.bak/
 venv.bak/
 
+
 # Spyder project settings
 .spyderproject
 .spyproject
@@ -138,3 +139,4 @@ __azurite_db*__.json
 .idea/openaipluginfunction.iml
 .idea/vcs.xml
 .idea/inspectionProfiles/profiles_settings.xml
+/.vscode/
