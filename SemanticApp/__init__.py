@@ -6,12 +6,9 @@
 """
 import logging
 import json
-import time
-from random import randint
-from flask import Flask, request, Response, send_file
-
 import asyncio
-import httpx
+from flask import Flask, request, Response, send_from_directory
+
 import semantic_kernel as sk
 from semantic_kernel.connectors.ai.open_ai.services.open_ai_chat_completion import (
     OpenAIChatCompletion,
@@ -21,48 +18,24 @@ from dotenv import dotenv_values
 
 from plugins.MathPlugin.Math import Math
 from plugins.OrchestratorPlugin.OrchestratorPlugin import Orchestrator
-
+from SemanticApp import kernel_utils as ku
 #app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
 app = Flask(__name__)
 
-def _openai_service() -> sk.Kernel:
-    """Using native and semantic functions together with OpenAI and Semantic Kernel"""
-    config = dotenv_values(".env")
-    semantic_kernel = sk.Kernel()
-    semantic_kernel.add_chat_service(
-        "chat_completion",
-        OpenAIChatCompletion(
-            config.get("OPEN_AI__CHAT_COMPLETION_MODEL_ID", None),
-            config.get("OPEN_AI__API_KEY", None),
-            config.get("OPEN_AI__ORG_ID", None),
-        ),
-    )
-    plugins_directory = "./plugins"
-    # Import the semantic functions
-    semantic_kernel.import_semantic_skill_from_directory(
-        plugins_directory, "OrchestratorPlugin"
-    )
-    semantic_kernel.import_skill(
-        ConversationSummarySkill(kernel=semantic_kernel),
-        skill_name="ConversationSummarySkill",
-    )
-    return semantic_kernel
-
 @app.route("/.well-known/ai-plugin.json", methods=["GET"])
 def get_ai_plugin():
-     """Well Known AI Plugin"""
-     with open("./.well-known/ai-plugin.json", "r",encoding="UTF-8") as file_obj:
-         text = file_obj.read()
-         return Response(text, status=200, mimetype="text/json")
+    """
+    ChatGPT manifest file, ai-plugin.json; 
+    It will look in the "".well-known" folder
+    """
+    return send_from_directory('./.well-known/', 'ai-plugin.json', mimetype='text/yaml')
 
 @app.route("/openapi.yaml", methods=["GET"])
 def get_openapi():
-    """get openai"""
-    with open("./SemanticApp/openapi.yaml","r", encoding="UTF-8") as file_obj:
-        text = file_obj.read()
-        return Response(text, status=200, mimetype="text/yaml")
-
+    """ ChatGPT will use this route to find our API specification, openapi.yaml"""
+    return send_from_directory('./SemanticApp', 'openapi.yaml', mimetype='text/yaml')
+    
 @app.post("/skills/math")
 def math_skill():
     """openai native function for multiple"""
@@ -70,7 +43,7 @@ def math_skill():
     try:
         req_body = json.loads(request.data)
         prompt = req_body['prompt']
-        kernel = _openai_service()
+        kernel = ku.create_kernel_for_request()
         # Import the native functions.
         kernel.import_skill(Math(), skill_name="MathPlugin")
         orchestrator_plugin = kernel.import_skill(
@@ -85,6 +58,5 @@ def math_skill():
         response_msg = {"error": str(ex)}
         return Response(json.dumps(response_msg), status=500, mimetype="application/json")
 
-    
 if __name__ == "__main__":
     app.run()
