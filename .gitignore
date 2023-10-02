@@ -140,3 +140,4 @@ __azurite_db*__.json
 .idea/vcs.xml
 .idea/inspectionProfiles/profiles_settings.xml
 /.vscode/
+.history/

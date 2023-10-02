@@ -16,28 +16,30 @@ class Orchestrator:
         name="RouteRequest",
     )
     async def route_request(self, context: SKContext) -> str:
+        """route request"""
         # Save the original user request
         request = context["input"]
 
         # Add the list of available functions to the context variables
-        variables = ContextVariables()
-        variables["input"] = request
-        variables["options"] = "Sqrt, Multiply, Add"
+        context_variable = ContextVariables()
+        context_variable["input"] = request
+        context_variable["options"] = "Sqrt, Multiply, Add"
 
         # Retrieve the intent from the user request
+        # From given input get the intent, it provides list of Options for the LLM to choose from
         get_intent = self._kernel.skills.get_function("OrchestratorPlugin", "GetIntent")
         intent = (
-            await self._kernel.run_async(get_intent, input_vars=variables)
+            await self._kernel.run_async(get_intent, input_vars=context_variable)
         ).result.strip()
 
         get_numbers = self._kernel.skills.get_function(
             "OrchestratorPlugin", "GetNumbers"
         )
 
-        getNumberContext = (
+        get_number_context = (
             await self._kernel.run_async(get_numbers, input_str=request)
         ).result
-        numbers = json.loads(getNumberContext)
+        numbers = json.loads(get_number_context)
 
         if intent == "Sqrt":
             square_root = self._kernel.skills.get_function("MathPlugin", "Sqrt")
@@ -47,20 +49,20 @@ class Orchestrator:
             return sqrt_results["input"]
         elif intent == "Multiply":
             multiply = self._kernel.skills.get_function("MathPlugin", "Multiply")
-            variables = ContextVariables()
-            variables["input"] = numbers["number1"]
-            variables["number2"] = numbers["number2"]
+            context_variable = ContextVariables()
+            context_variable["input"] = numbers["number1"]
+            context_variable["number2"] = numbers["number2"]
             multiply_results = await self._kernel.run_async(
-                multiply, input_vars=variables
+                multiply, input_vars=context_variable
             )
             return multiply_results["input"]
         elif intent == "Add":
             add = self._kernel.skills.get_function("MathPlugin", "Add")
-            variables = ContextVariables()
-            variables["input"] = numbers["number1"]
-            variables["number2"] = numbers["number2"]
+            context_variable = ContextVariables()
+            context_variable["input"] = numbers["number1"]
+            context_variable["number2"] = numbers["number2"]
             add_results = await self._kernel.run_async(
-                add, input_vars=variables
+                add, input_vars=context_variable
             )
             return add_results["input"]
         else:

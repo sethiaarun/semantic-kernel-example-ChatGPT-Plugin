@@ -18,7 +18,7 @@ from dotenv import dotenv_values
 
 from plugins.MathPlugin.Math import Math
 from plugins.OrchestratorPlugin.OrchestratorPlugin import Orchestrator
-from SemanticApp import kernel_utils as ku
+from SemanticApp.kernel_utils import KernelUtil
 #app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
 app = Flask(__name__)
@@ -43,15 +43,8 @@ def math_skill():
     try:
         req_body = json.loads(request.data)
         prompt = req_body['prompt']
-        kernel = ku.create_kernel_for_request()
-        # Import the native functions.
-        kernel.import_skill(Math(), skill_name="MathPlugin")
-        orchestrator_plugin = kernel.import_skill(
-            Orchestrator(kernel), skill_name="OrchestratorPlugin"
-        )
-        result = asyncio.run(kernel.run_async(
-            orchestrator_plugin["RouteRequest"], input_str=prompt
-        ))
+        kernel = KernelUtil.create_kernel_for_request()
+        result = asyncio.run(KernelUtil.route_request(kernel,prompt))
         response_msg = {"result": str(result)}
         return Response(json.dumps(response_msg), status=200, mimetype="application/json")
     except ValueError as ex:
