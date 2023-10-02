@@ -65,3 +65,9 @@ The ChatGPT Plugin consists of three things: an app wrapped in an API, a manifes
 - [VSCode](https://code.visualstudio.com/download)
 - Python >= 3.10
 - OpenAI API Key
+
+# Explore More
+
+In this example we have manually orchestrated (using RouteRequest) all of the functions on behalf of the user. This, however, is not a scalable solution because it would require the app developer to predict all possible requests that could be made by the user. So instead, we will learn how to automatically orchestrate functions on the fly using planner.
+
+You can read more about the [planner](https://learn.microsoft.com/en-us/semantic-kernel/ai-orchestration/planners/?tabs=Csharp) and [when to use](https://learn.microsoft.com/en-us/semantic-kernel/ai-orchestration/planners/?tabs=Csharp#when-to-use-planner).
