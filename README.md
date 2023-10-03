@@ -79,6 +79,10 @@ From VSCOde:
 
 - Run from VSCode, [follow steps](https://learn.microsoft.com/en-us/azure/azure-functions/functions-develop-vs-code?tabs=node-v3%2Cpython-v2%2Cisolated-process&pivots=programming-language-csharp#run-functions-locally)
 
+Invoke Math Skill:
+
+`curl --request POST http://localhost:7071/skills/math -H "Content-Type: application/json" -d "{\"prompt\":\"square root of 144?\"}"`
+
 # Explore More
 
 In this example we have manually orchestrated (using RouteRequest) all of the functions on behalf of the user. This, however, is not a scalable solution because it would require the app developer to predict all possible requests that could be made by the user. So instead, we will learn how to automatically orchestrate functions on the fly using planner.
