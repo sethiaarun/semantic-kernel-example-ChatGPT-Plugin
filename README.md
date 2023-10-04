@@ -65,6 +65,23 @@ The ChatGPT Plugin consists of three things: an app wrapped in an API, a manifes
 - [VSCode](https://code.visualstudio.com/download)
 - Python >= 3.10
 - OpenAI API Key
+- Setup python venv
+
+## How to run?
+
+From Command Line or Powershell:
+
+- Activate Python venv
+- `pip install -r requirements.txt`
+- run `func host start`
+
+From VSCOde:
+
+- Run from VSCode, [follow steps](https://learn.microsoft.com/en-us/azure/azure-functions/functions-develop-vs-code?tabs=node-v3%2Cpython-v2%2Cisolated-process&pivots=programming-language-csharp#run-functions-locally)
+
+Invoke Math Skill:
+
+`curl --request POST http://localhost:7071/skills/math -H "Content-Type: application/json" -d "{\"prompt\":\"square root of 144?\"}"`
 
 # Explore More
 
