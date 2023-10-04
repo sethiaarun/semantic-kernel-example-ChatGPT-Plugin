@@ -12,6 +12,25 @@ class Orchestrator:
         self._kernel = kernel
 
     @sk_function(
+            description="Extracts numbers from JSON",
+            name="ExtractNumbersFromJson"
+    )
+    def extract_numbers_from_json(self, context: SKContext):
+        """Mative function - the input variable is coming from the pipeline, here it is from the GetNumber semantic function"""
+        numbers = json.loads(context["input"])
+
+        # Loop through numbers and add them to the context
+        for key, value in numbers.items():
+            if key == "number1":
+                # Add the first number to the input variable
+                context["input"] = str(value)
+            else:
+                # Add the rest of the numbers to the context
+                context[key] = str(value)
+
+        return context
+
+    @sk_function(
         description="Routes the request to the appropriate function",
         name="RouteRequest",
     )
@@ -32,38 +51,39 @@ class Orchestrator:
             await self._kernel.run_async(get_intent, input_vars=context_variable)
         ).result.strip()
 
+        # Prepare the functions to be called in the pipeline
         get_numbers = self._kernel.skills.get_function(
             "OrchestratorPlugin", "GetNumbers"
         )
-
-        get_number_context = (
-            await self._kernel.run_async(get_numbers, input_str=request)
-        ).result
-        numbers = json.loads(get_number_context)
+        # extract numbers from the response we got from GetNumbers
+        extract_numbers_from_json = self._kernel.skills.get_function(
+            "OrchestratorPlugin", "ExtractNumbersFromJson"
+        )
+        create_response = self._kernel.skills.get_function(
+            "OrchestratorPlugin", "CreateResponse"
+        )
 
         if intent == "Sqrt":
-            square_root = self._kernel.skills.get_function("MathPlugin", "Sqrt")
-            sqrt_results = await self._kernel.run_async(
-                square_root, input_str=numbers["number1"]
-            )
-            return sqrt_results["input"]
+            math_function  = self._kernel.skills.get_function("MathPlugin", "Sqrt")
         elif intent == "Multiply":
-            multiply = self._kernel.skills.get_function("MathPlugin", "Multiply")
-            context_variable = ContextVariables()
-            context_variable["input"] = numbers["number1"]
-            context_variable["number2"] = numbers["number2"]
-            multiply_results = await self._kernel.run_async(
-                multiply, input_vars=context_variable
-            )
-            return multiply_results["input"]
+            math_function = self._kernel.skills.get_function("MathPlugin", "Multiply")
         elif intent == "Add":
-            add = self._kernel.skills.get_function("MathPlugin", "Add")
-            context_variable = ContextVariables()
-            context_variable["input"] = numbers["number1"]
-            context_variable["number2"] = numbers["number2"]
-            add_results = await self._kernel.run_async(
-                add, input_vars=context_variable
-            )
-            return add_results["input"]
+            math_function = self._kernel.skills.get_function("MathPlugin", "Add")
         else:
             return "I'm sorry, I don't understand."
+
+         # Create a new context object with the original request
+        pipeline_variables = ContextVariables()
+        pipeline_variables["original_request"] = request
+        pipeline_variables["input"] = request
+
+        # Run the functions in a pipeline
+        output = await self._kernel.run_async(
+            get_numbers,
+            extract_numbers_from_json,
+            math_function,
+            create_response,
+            input_vars=pipeline_variables,
+        )
+
+        return output["input"]
