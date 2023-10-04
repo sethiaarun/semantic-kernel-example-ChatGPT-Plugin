@@ -1,12 +1,12 @@
 """Kernel util functions"""
-import asyncio
+
 import semantic_kernel as sk
 from semantic_kernel.connectors.ai.open_ai.services.open_ai_chat_completion import (
     OpenAIChatCompletion,
 )
 from semantic_kernel.core_skills import ConversationSummarySkill
 
-from SemanticApp import aiserviceconfig as aiconf
+from semanticutil import aiserviceconfig as aiconf
 from plugins.MathPlugin.Math import Math
 from plugins.OrchestratorPlugin.OrchestratorPlugin import Orchestrator
 

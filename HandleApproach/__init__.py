@@ -1,6 +1,6 @@
 """The following is using WsgiMiddleware, which redirects the invocations to Flask handler."""
 import azure.functions as func
-from SemanticApp import app
+from SemanticApp.main import app
 
 def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
     """Each request is redirected to the WSGI handler.
