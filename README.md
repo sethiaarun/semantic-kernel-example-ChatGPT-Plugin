@@ -1,6 +1,8 @@
 # semantic-kernel-example-ChatGPT-Plugin
 Microsoft Semantic Kernel - Example application creating ChatGPT plugin using Native and Semantic function with Python and Azure Function App. In this example code, we demonstrate how to combine native functions with semantic functions to correctly answer word problems like What is the "square root of 634?", "square root of 144", "What is 42 plus 1513" or "multiply 2 times 4", etc.
 
+In this example, the code plugin is built with OpenAI standard specifications. The example uses a plugin manifest file that points to an accompanying [OpenAPI](https://www.openapis.org/) specification. Plugins defined in this way can be used by any application supporting the OpenAI specification, including Semantic Kernel and ChatGPT.
+
 ## Microsoft Semantic Kernel
 
 The [Microsoft Semantic kernel](https://learn.microsoft.com/en-us/semantic-kernel/ai-orchestration/kernel/?tabs=Csharp) is responsible for managing resources that are necessary to run "code" in an AI application. This includes managing the configuration, services, and plugins necessary for native code and AI services to run together.
@@ -52,7 +54,6 @@ All native functions are public methods of [Math.py](./plugins/MathPlugin/Math.p
 
 The Kernel util loads the kernel with all the functions that are needed by the RouteRequest function. If we do not appropriately load the GetIntent, GetNumbers, Sqrt, and Multiply functions, If we do not appropriately load the GetIntent, GetNumbers, Sqrt, and Multiply functions, the RouteRequest function will fail when it tries to call them.
 
-
 ## ChatGPT Plugin
 
 The ChatGPT Plugin consists of three things: an app wrapped in an API, a manifest file, and an OpenAPI specification.
@@ -67,21 +68,46 @@ The ChatGPT Plugin consists of three things: an app wrapped in an API, a manifes
 - OpenAI API Key
 - Setup python venv
 
+## Implementations
+
+We have two different ways to expose Semantic Kernel plugin:
+
+#### Using [Python Flask](https://flask.palletsprojects.com/en/3.0.x/) Framework with [Azure Functions](https://learn.microsoft.com/en-us/samples/azure-samples/flask-app-on-azure-functions/azure-functions-python-create-flask-app/)
+
+It exposes following [endpoints](./SemanticApp/main.py):
+
+1. Plugin manifest endpoint - /.well-known/ai-plugin.json 
+2. OpenAPI Specification endpoint - /openapi.yaml
+3. Function endpoint - /skills/math
+
+#### Using [Python Tornado](https://www.tornadoweb.org/en/stable/) Web Server
+
+It exposes following [endpoints](./tornadoapp/main.py):
+
+1. Plugin manifest endpoint - /.well-known/ai-plugin.json
+2. OpenAPI Specification endpoint - /swagger/spec and UI /swagger/spec.html
+3. Function endpoint - /skills/math
+
+
 ## How to run?
 
-From Command Line or Powershell:
+#### From Command Line or Powershell:
 
 - Activate Python venv
+- Append root directory of the project to PYTHONPATH
 - `pip install -r requirements.txt`
-- run `func host start`
+- run `func host start` to start Azure function application on port 7070
+- run `python .\tornadoapp\main.py` to start Tornado webserver at port 8888
 
-From VSCOde:
+#### From VSCOde:
 
-- Run from VSCode, [follow steps](https://learn.microsoft.com/en-us/azure/azure-functions/functions-develop-vs-code?tabs=node-v3%2Cpython-v2%2Cisolated-process&pivots=programming-language-csharp#run-functions-locally)
+Run from VSCode, [follow steps](https://learn.microsoft.com/en-us/azure/azure-functions/functions-develop-vs-code?tabs=node-v3%2Cpython-v2%2Cisolated-process&pivots=programming-language-csharp#run-functions-locally)
+
+The [launch.json](./.vscode/launch.json) has the configuration for "Python: TornadoApp" and "Attach to Python Functions." Using "Run & Debug," you can start Azure Function locally or Tornado Web Server.
 
 Invoke Math Skill:
 
-`curl --request POST http://localhost:7071/skills/math -H "Content-Type: application/json" -d "{\"prompt\":\"square root of 144?\"}"`
+`curl --request POST http://localhost:<<port>>/skills/math -H "Content-Type: application/json" -d "{\"prompt\":\"square root of 144?\"}"`
 
 # Explore More
 
