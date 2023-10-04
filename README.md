@@ -37,6 +37,9 @@ We are going to use [Semantic Kernel prompt template language](https://learn.mic
 
 [`GetNumber`](./plugins/OrchestratorPlugin/GetNumbers/) semnatic function is defined to pull the numbers from the user's input. This semantic function uses few-shot learning (user defined example conversation) to demonstrate to the LLM how to correctly extract the numbers from the user's request and output them in JSON format. This will allow us to easily pass the numbers to the Sqrt and Multiply functions.
 
+#### `CreateResponse`
+
+[`CreateResponse`](./plugins/OrchestratorPlugin/CreateResponse/) smenatic function si defined to create resonse for with original_request.
 
 ### Native Functions
 
@@ -46,9 +49,17 @@ With Native Functions, you can have the Semantic kernel call C# or Python code d
 
 All native functions are public methods of [Math.py](./plugins/MathPlugin/Math.py) class that represents your plugin. Using [SKFunction decorator](https://learn.microsoft.com/en-us/semantic-kernel/ai-orchestration/plugins/native-functions/using-the-skfunction-decorator?tabs=Csharp#use-the-skfunction-decorator-to-define-a-native-function) we inform Semantic Kernel that It is a native function and will automatically register it with the kernel when the plugin is loaded.
 
+### ExtractNumbersFromJson
+
+The `ExtractNumbersFromJson` native function takes the JSON string from the input variable and extract the numbers from it into the context object. 
+
 #### RouteRequest
 
 [RouteRequest](./plugins/OrchestratorPlugin/OrchestratorPlugin.py) is another Native function; It will leverage Semantic Functions (`GetIntent` and `GetNumber`) and call the appropriate Native functions (Math functions) based on the user's intent. Since the RouteRequest function helps orchestrate the flow, we have added the same to the `OrchestratorPlugin` plugin. The `route_request` function is decorated using the SKFunction decorator to inform Semantic Kernel that It is a native function. This plugin will run other functions, we'll need to pass the kernel to the plugin during initialization.
+
+Using Semantic Kernel piping capabilities we orchestrates (semantic and native functions) pipelines with an `input` variable in the context object; It allows you to stream output from one semantic function to the next.
+
+   `get_numbers` -> `extract_numbers_from_json` -> `math_function` -> `create_response`
 
 ## Kernel Util
 
@@ -86,6 +97,9 @@ It exposes following [endpoints](./tornadoapp/main.py):
 
 1. Plugin manifest endpoint - /.well-known/ai-plugin.json
 2. OpenAPI Specification endpoint - /swagger/spec and UI /swagger/spec.html
+  <a href="./images/swagger.png" target="_blank"><img src="./images/swagger.png" width="30%" height="20%"></a>
+  <br/>
+  <a href="./images/swagger_json.png" target="_blank"><img src="./images/swagger_json.png" width="30%" height="5%"></a>
 3. Function endpoint - /skills/math
 
 

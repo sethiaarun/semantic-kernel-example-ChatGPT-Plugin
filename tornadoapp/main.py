@@ -91,7 +91,7 @@ class MathSkill(tornado.web.RequestHandler):
             test (MathSkillBody) -- Required.  The user prompt like what is square root of 144?
         
         200 Response:
-            test (MathResult) -- Math result
+            test (MathResult) -- Response with initial request
         
         Error Responses:
             500 (ErrorResponse) -- Internal Server Error.

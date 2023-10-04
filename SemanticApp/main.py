@@ -26,11 +26,11 @@ def get_ai_plugin():
 def get_openapi():
     """ ChatGPT will use this route to find our API specification, openapi.yaml"""
     return send_from_directory('./SemanticApp', 'openapi.yaml', mimetype='text/yaml')
-    
+   
 @app.post("/skills/math")
 def math_skill():
     """openai native function for multiple"""
-    logging.info("Python HTTP trigger function processed a request.")
+    logging.info("Python HTTP trigger function for a request.")
     try:
         req_body = json.loads(request.data)
         prompt = req_body['prompt']
