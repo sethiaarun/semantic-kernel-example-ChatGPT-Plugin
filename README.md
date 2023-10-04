@@ -97,6 +97,9 @@ It exposes following [endpoints](./tornadoapp/main.py):
 
 1. Plugin manifest endpoint - /.well-known/ai-plugin.json
 2. OpenAPI Specification endpoint - /swagger/spec and UI /swagger/spec.html
+  <a href="./images/swagger.png" target="_blank"><img src="./images/swagger.png" width="30%" height="20%"></a>
+  <br/>
+  <a href="./images/swagger_json.png" target="_blank"><img src="./images/swagger_json.png" width="30%" height="5%"></a>
 3. Function endpoint - /skills/math
 
 
