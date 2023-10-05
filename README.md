@@ -87,20 +87,22 @@ We have two different ways to expose Semantic Kernel plugin:
 
 It exposes following [endpoints](./SemanticApp/main.py):
 
-1. Plugin manifest endpoint - /.well-known/ai-plugin.json 
-2. OpenAPI Specification endpoint - /openapi.yaml
-3. Function endpoint - /skills/math
+1. Plugin manifest endpoint - `/.well-known/ai-plugin.json`
+2. OpenAPI Specification endpoint - `/openapi.yaml`
+3. Function endpoint - `/skills/math`
+
+*[`./SemanticApp/openapi.yaml`] is created from `/swagger/spec` API exposed from [Python Tornado Sswirl](https://github.com/rnduldulaojr/tornado-swirl)
 
 #### Using [Python Tornado](https://www.tornadoweb.org/en/stable/) Web Server
 
-It exposes following [endpoints](./tornadoapp/main.py):
+It exposes following [endpoints](./tornadoapp/main.py); where OpenAPI specs are created using [Python Tornado Sswirl](https://github.com/rnduldulaojr/tornado-swirl):
 
-1. Plugin manifest endpoint - /.well-known/ai-plugin.json
-2. OpenAPI Specification endpoint - /swagger/spec and UI /swagger/spec.html  <br/>
+1. Plugin manifest endpoint - `/.well-known/ai-plugin.json`
+2. OpenAPI Specification endpoint - json format `/swagger/spec` and UI `/swagger/spec.html`  <br/>
   <a href="./images/swagger.png" target="_blank"><img src="./images/swagger.png" width="30%" height="20%"></a>
   <br/>
   <a href="./images/swagger_json.png" target="_blank"><img src="./images/swagger_json.png" width="30%" height="5%"></a>
-3. Function endpoint - /skills/math
+3. Function endpoint - `/skills/math`
 
 ## How to run?
 
