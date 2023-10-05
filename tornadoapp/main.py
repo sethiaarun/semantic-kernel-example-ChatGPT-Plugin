@@ -1,6 +1,5 @@
-#pylint: disable=W0223 
+#pylint: disable=W0223
 import logging
-import signal
 import json
 import asyncio
 import tornado
