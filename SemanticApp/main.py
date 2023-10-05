@@ -7,26 +7,35 @@
 import logging
 import json
 import asyncio
-from flask import Flask, request, Response, send_from_directory
+from flask import Flask, request, Response
 
 from semanticutil.kernel_utils import KernelUtil
 #app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
 app = Flask(__name__)
 
-@app.route("/.well-known/ai-plugin.json", methods=["GET"])
+
+AI_PLUGIN_FILE  ="./ai-plugin/ai-plugin_az_func.json"
+
+@app.get("/.well-known/ai-plugin.json")
 def get_ai_plugin():
     """
     ChatGPT manifest file, ai-plugin.json; 
     It will look in the "".well-known" folder
     """
-    return send_from_directory('./.well-known/', 'ai-plugin.json', mimetype='application/json')
+    logging.info("getting aiplugin file:%s",AI_PLUGIN_FILE)
+    with open(AI_PLUGIN_FILE, "r", encoding="UTF-8") as file_read:
+        text = file_read.read()
+    return Response(text, status=200, mimetype="application/json")
 
-@app.route("/openapi.yaml", methods=["GET"])
+@app.get("/openapi.yaml")
 def get_openapi():
     """ ChatGPT will use this route to find our API specification, openapi.yaml"""
-    return send_from_directory('./SemanticApp', 'openapi.yaml', mimetype='text/yaml')
-   
+    logging.info("getting aiplugin file:%s",AI_PLUGIN_FILE)
+    with open("./SemanticApp/openapi.yaml", "r", encoding="UTF-8") as file_read:
+        text = file_read.read()
+    return Response(text, status=200, mimetype="text/yaml")
+ 
 @app.post("/skills/math")
 def math_skill():
     """openai native function for multiple"""

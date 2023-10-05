@@ -13,6 +13,8 @@ from semanticutil.kernel_utils import KernelUtil
 
 define("port", default=8888, help="run on the given port", type=int)
 
+AI_PLUGIN_FILE  ="./ai-plugin/ai-plugin_tonado_app.json"
+
 @swirl.schema
 class ErrorResponse(object):
     """Error response object.
@@ -54,8 +56,8 @@ class AIPluginHandler(tornado.web.RequestHandler):
             x (string) -- openapi manifest in application/json format
 
         """
-        logging.info("/.well-known/ai-plugin.json")
-        with open("./.well-known/ai-plugin.json", "r", encoding="UTF-8") as file_read:
+        logging.info("getting aiplugin file:%s",AI_PLUGIN_FILE)
+        with open(AI_PLUGIN_FILE, "r", encoding="UTF-8") as file_read:
             text = file_read.read()
             return self.write(text)
 
