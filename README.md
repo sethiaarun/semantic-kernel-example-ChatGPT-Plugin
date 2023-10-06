@@ -132,7 +132,18 @@ You can read more about the [planner](https://learn.microsoft.com/en-us/semantic
 
 The [client application](./planner_client_app.py) has an example code using `SequentialPlanner`, in this example, we are importing the plugin using locally (:grey_question: not remotely by importing plugin from manifest URL,I did not find API for Python similar to C# `kernel.ImportChatGptPluginSkillFromUrlAsync`)
 
-You can run this application from VSCode using "Run & Debug" or from the terminal (`pip install requirements.txt` and Append the root directory of the project to PYTHONPATH).
+If you want to know how planner is working along with OpenAI services, I would suggest enable debugging from `/.vscode/launch.json` by setting `"justMyCode": false`. You will find the execution flow of this [client application](https://github.com/sethiaarun/semantic-kernel-example-ChatGPT-Plugin/blob/main/planner_client_app.py) is as following:
+
+1. The `create_plan_async` loads all relevant functions manual (provided by Kernel object), in this case we are providing `OrchestratorPlugin` and `MathPlugin`.
+2. It sets them in the context (available_functions)
+3. The [`sk_function`] (https://github.com/microsoft/semantic-kernel/blob/main/python/semantic_kernel/orchestration/sk_function.py) can generate render prompt from prompt_template_engine with the help of context variables and prompt_template (in this case it uses https://github.com/microsoft/semantic-kernel/blob/main/python/semantic_kernel/planning/sequential_planner/Skills/SequentialPlanning/skprompt.txt). 
+4. Once we have rendered prompt, it uses the  OpenAIChatCompletion connector from openai service (https://github.com/microsoft/semantic-kernel/blob/main/python/semantic_kernel/connectors/ai/open_ai/services/open_ai_chat_completion.py) for chat request (prompt_to_message = [("user", prompt)]), the response from OpenAI is a result plan. Semantic Kernel executes the resulting plan.
+
+Manually I ran the same from the OpenAI PlayGround:
+
+<a href="./images/rendered_plan_result_plan.png" target="_blank"><img src="./images/rendered_plan_result_plan.png" width="30%" height="5%"></a> <br/>
+
+**You can run this application ** from VSCode using "Run & Debug" or from the terminal (`pip install requirements.txt` and Append the root directory of the project to PYTHONPATH).
 
 ## Deploy
 
