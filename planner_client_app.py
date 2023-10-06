@@ -8,7 +8,7 @@ from semanticutil.kernel_utils import KernelUtil
 async def main():
     """main function"""
     kernel =  KernelUtil.create_kernel_for_request()
-    ask = "If my investment of 2130.23 dollars increased by 23, how much would I have after I spent $5 on a latte?"
+    ask = "If my investment of 2130.23 dollars increased by 23%, how much would I have after I spent $5 on a latte?"
     planner = SequentialPlanner(kernel)
     plan = await planner.create_plan_async(ask)
     # Execute the plan

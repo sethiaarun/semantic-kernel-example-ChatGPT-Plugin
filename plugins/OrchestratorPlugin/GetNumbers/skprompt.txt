@@ -10,5 +10,6 @@ OUTPUT: {"number1":2,"number2":3}
 INPUT: I have a 2x4 that is 8 feet long. Can you cut it in half?
 OUTPUT: {"number1":2, "number2":4}
 
+
 INPUT: {{$input}}
 OUTPUT:

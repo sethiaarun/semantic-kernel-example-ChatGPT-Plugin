@@ -20,7 +20,7 @@ class Math:
         return str(math.sqrt(float(context["input"])))
 
     @sk_function(
-        description="Multiplies two numbers together",
+        description="Multiply two numbers. When increasing by a percentage, don't forget to add 1 to the percentage.",
         name="multiply",
     )
     @sk_function_context_parameter(
