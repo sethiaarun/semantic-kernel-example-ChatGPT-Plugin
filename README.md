@@ -124,6 +124,16 @@ Invoke Math Skill:
 
 `curl --request POST http://localhost:<<port>>/skills/math -H "Content-Type: application/json" -d "{\"prompt\":\"square root of 144?\"}"`
 
+## Planner
+
+The [Orchestrator](./plugins/OrchestratorPlugin/OrchestratorPlugin.py) orchestrated all of the functions on behalf of the user. This, however, is not a scalable solution because it would require the app developer to predict all possible requests that the user could make. So instead, we can use [planner](https://learn.microsoft.com/en-us/semantic-kernel/ai-orchestration/planners/?tabs=Csharp) to automatically orchestrate functions on the fly using a planner.
+
+You can read more about the [planner](https://learn.microsoft.com/en-us/semantic-kernel/ai-orchestration/planners/?tabs=Csharp) and [when to use](https://learn.microsoft.com/en-us/semantic-kernel/ai-orchestration/planners/?tabs=Csharp#when-to-use-planner).
+
+The [client application](./planner_client_app.py) has an example code using `SequentialPlanner`, in this example, we are importing the plugin using locally (:information: not remotely by importing plugin from manifest URL,I did not find API for Python similar to C# `kernel.ImportChatGptPluginSkillFromUrlAsync`)
+
+You can run this application from VSCode using "Run & Debug" or from the terminal (`pip install requirements.txt` and Append the root directory of the project to PYTHONPATH).
+
 ## Deploy
 
 You can deploy Semantic Kernel to Azure using Azure functions by following steps [listed here.](https://devblogs.microsoft.com/semantic-kernel/how-to-deploy-semantic-kernel-to-azure-in-minutes/)
@@ -132,4 +142,3 @@ You can deploy Semantic Kernel to Azure using Azure functions by following steps
 
 In this example we have manually orchestrated (using RouteRequest) all of the functions on behalf of the user. This, however, is not a scalable solution because it would require the app developer to predict all possible requests that could be made by the user. So instead, we will learn how to automatically orchestrate functions on the fly using planner.
 
-You can read more about the [planner](https://learn.microsoft.com/en-us/semantic-kernel/ai-orchestration/planners/?tabs=Csharp) and [when to use](https://learn.microsoft.com/en-us/semantic-kernel/ai-orchestration/planners/?tabs=Csharp#when-to-use-planner).

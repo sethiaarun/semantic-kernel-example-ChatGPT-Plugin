@@ -16,11 +16,12 @@ class Math:
         input_description="The value to take the square root of",
     )
     def square_root(self, context: SKContext) -> str:
+        """square root"""
         return str(math.sqrt(float(context["input"])))
 
     @sk_function(
         description="Multiplies two numbers together",
-        name="Multiply",
+        name="multiply",
     )
     @sk_function_context_parameter(
         name="input",
@@ -36,7 +37,7 @@ class Math:
 
     @sk_function(
         description="Add two numbers together",
-        name="Add",
+        name="add",
     )
     @sk_function_context_parameter(
         name="input",
@@ -49,3 +50,35 @@ class Math:
     def add(self, context: SKContext) -> str:
         """add two numbers"""
         return str(float(context["input"]) + float(context["number2"]))
+
+    @sk_function(
+        description="Subtract two numbers together",
+        name="subtract",
+    )
+    @sk_function_context_parameter(
+        name="input",
+        description="The first number to subtract from",
+    )
+    @sk_function_context_parameter(
+        name="number2",
+        description="The second number to subtract away",
+    )
+    def subtract(self, context: SKContext) -> str:
+        """subtract two numbers"""
+        return str(float(context["input"]) - float(context["number2"]))
+
+    @sk_function(
+        description="Divide two numbers together",
+        name="divide",
+    )
+    @sk_function_context_parameter(
+        name="input",
+        description="The first number to divide from",
+    )
+    @sk_function_context_parameter(
+        name="number2",
+        description="The second number to divide by",
+    )
+    def divide(self, context: SKContext) -> str:
+        """add two numbers"""
+        return str(float(context["input"]) / float(context["number2"]))

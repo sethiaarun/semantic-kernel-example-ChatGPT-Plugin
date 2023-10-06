@@ -12,6 +12,16 @@
       "preLaunchTask": "pipInstall"
     },
     {
+      "name": "Python: ClientApp",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}\\planner_client_app.py",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "env": {"PYTHONPATH": "${workspaceFolder}${pathSeparator}${env:PYTHONPATH}"},
+      "preLaunchTask": "pipInstall"
+    },
+    {
       "name": "Attach to Python Functions",
       "type": "python",
       "request": "attach",
