@@ -124,6 +124,10 @@ Invoke Math Skill:
 
 `curl --request POST http://localhost:<<port>>/skills/math -H "Content-Type: application/json" -d "{\"prompt\":\"square root of 144?\"}"`
 
+## Deploy
+
+You can deploy Semantic Kernel to Azure using Azure functions by following steps [listed here.](https://devblogs.microsoft.com/semantic-kernel/how-to-deploy-semantic-kernel-to-azure-in-minutes/)
+
 # Explore More
 
 In this example we have manually orchestrated (using RouteRequest) all of the functions on behalf of the user. This, however, is not a scalable solution because it would require the app developer to predict all possible requests that could be made by the user. So instead, we will learn how to automatically orchestrate functions on the fly using planner.
